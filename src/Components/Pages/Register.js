@@ -82,13 +82,13 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
         var passwordRegex = new RegExp("^(?=.*[a-zA-Z0-9!@#$%^&*.-_=+]).{8,16}");
         if (usermap.has(registerData.username)) {
             invalid = true;
-            errors["username"] = "This Username Already Exists.";
+            errors["username"] = "Username Already Exists.";
         }
-        if (!passwordRegex.test(registerData.password)) {
+        if (registerData.password !== '' && !passwordRegex.test(registerData.password)) {
             invalid = true;
-            errors["password"] = "Password must have 8 to 16 alphanumerical or !@#$%^&*.-_=+ characters."
+            errors["password"] = "Must be 8 to 16 characters."
         }
-        if (registerData.password !== registerData.validate) {
+        if (registerData.validate !== '' && registerData.password !== registerData.validate) {
             invalid = true;
             errors["validate"] = "Passwords Must Match."
         }
@@ -126,38 +126,38 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
     }
 
     return (
-        <div className="text-center m-5-auto">
-            <h2>Register</h2>
-            <h5>Create your personal account</h5>
+        <div className="center-text font-white font-large">
+            <h2>Register Page</h2>
             <form onSubmit={submitUser}>
                 <p>
-                    <label>Username</label><br/>
-                    <input type="text" id="username" required onChange={onUsernameChange} onBlur={validateInfo}/>
+                    <label className="label-form font-white">Username</label><br/>
+                    <input className="logreg-input" type="text" id="username" required onChange={onUsernameChange} onBlur={validateInfo}/>
                     <div className="text-danger">{error.errorList["username"]}</div>
                 </p>
                 <p>
-                    <label>Nickname</label><br/>
-                    <input type="text" id="nickname" required onChange={onNicknameChange} onBlur={validateInfo}/>
+                    <label className="label-form font-white">Nickname</label><br/>
+                    <input className="logreg-input" type="text" id="nickname" required onChange={onNicknameChange} onBlur={validateInfo}/>
                 </p>
                 <p>
-                    <label>Password</label><br/>
-                    <input type="password" id="password" required onChange={onPasswordChange} onBlur={validateInfo}/>
+                    <label className="label-form font-white">Password</label><br/>
+                    <input className="logreg-input" type="password" id="password" required onChange={onPasswordChange} onBlur={validateInfo}/>
                     <div className="text-danger">{error.errorList["password"]}</div>
                 </p>
                 <p>
-                    <label>Validate Password</label><br/>
-                    <input type="password" id="validate" required onChange={onValidateChange} onBlur={validateInfo}/>
+                    <label className="label-form font-white">Validate Password</label><br/>
+                    <input className="logreg-input" type="password" id="validate" required onChange={onValidateChange} onBlur={validateInfo}/>
                     <div className="text-danger">{error.errorList["validate"]}</div>
                 </p>
                 <p>
-                    <label>Photo</label><br/>
-                    <input type="file" id="photo" onChange={onPhotoChange} accept="image/*"/>
+                    <label className="label-form font-white">Photo</label><br/>
+                    <input className="logreg-input" type="file" id="photo" onChange={onPhotoChange} accept="image/*"/>
                 </p>
                 <p>
-                    <button id="sub_btn" type="submit" disabled={!registerData.valid}>Register</button>
+                    <button id="submit-btn" type="submit" disabled={!registerData.valid}>Register</button>
                 </p>
             </form>
             <footer>
+                <p>Already have an account? <Link to="/login">Click Here</Link> to login!</p>
                 <p><Link to="/">Back to the Home Page</Link>.</p>
             </footer>
         </div>
