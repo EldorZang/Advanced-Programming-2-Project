@@ -1,0 +1,16 @@
+       { "user1": {
+            nickname: user1Rocks,
+            password: "user1pass",
+            friends: [user2,user3]
+        },
+        "user2": {
+            nickname: user2Rocks,
+            password: "user2pass",
+            friends: [user3]
+        },
+        "user3": {
+            nickname: user3Rocks,
+            password: "user3pass",
+            friends: []
+        }
+        }
