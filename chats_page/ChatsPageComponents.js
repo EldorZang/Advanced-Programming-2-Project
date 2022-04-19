@@ -8,33 +8,33 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import profile from "./images/profile_1.jpg";
 import message_sent from "./images/sent_message.jpg";
 import message_recv from "./images/recv_message.jpg";
 import './ChatsPageComponents.css';
 import { MessagesInfo, UsersInfo } from './databaseArrs'
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+import TabContainer from 'react-bootstrap/TabContainer'
+import TabContent from 'react-bootstrap/TabContent'
+import TabPane from 'react-bootstrap/TabPane'
+import Nav from 'react-bootstrap/Nav'
 function ResolveUserInfo(userName, users, userMessages) {
-
     let timeStamp = (userMessages[userMessages.length - 1]).timeStamp;
-
-    let message, picture,nickname;
+    let message, picture, nickname;
     if ((userMessages[userMessages.length - 1]).type === "text") {
-
         message = userMessages[userMessages.length - 1].data
     }
     else {
-
         message = userMessages[userMessages.length - 1].type
     }
-
     picture = users.profile
     nickname = users.nickname
-
     return ({
         "timeStamp": timeStamp,
         "message": message,
         "picture": picture,
-        "nickname": nickname
+        "nickname": nickname,
+        "username": userName
     });
 }
 export function Main_Page() {
@@ -42,23 +42,23 @@ export function Main_Page() {
     const [userMessages, setuserMessages] = useState(MessagesInfo);
     let usersInfo = [];
     Object.keys(users).map((user) => {
-        usersInfo = [...usersInfo,ResolveUserInfo(user, users[user], userMessages[user])]
+        usersInfo = [...usersInfo, ResolveUserInfo(user, users[user], userMessages[user])]
     })
     return (
         <Container >
             <Row class="row g-0">
-                {    console.log(usersInfo)}
-                <Col ><SideBar props={usersInfo}/></Col>
-                <Col><MessageWindow messages={userMessages["user1"]} /></Col>
+                <Col ><ChatsNavigation data={
+                    {
+                        "usersInfo": usersInfo,
+                        "users": users,
+                        "userMessages": userMessages
+                    }} /></Col>
             </Row>
         </Container>
     )
 }
 export function MessageWindow(props) {
-    const [messages, setMessages] = useState(props.messages);
-    console.log("log2");
-    console.log(messages);
-
+    const [messages, setMessages] = useState(props.data);
     return (
         <Container fluid='true'>
             {messages.map((messageData) => {
@@ -87,41 +87,53 @@ export function Message(props) {
 
     )
 }
+function get_path(str) {
+    return str.data;
+}
 export function ChatInfo(props) {
-    console.log("54:");
-    console.log(props);
     const [info, setInfo] = useState(props.data);
-    console.log("30:")
-    console.log(info);
     return (
         <Container fluid='true'>
             <Row>
-                {console.log(info.picture)}
-                <Col ><img src={info.picture} alt="profile" width="100" height="100" /></Col>
+
+                <Col ><img src={`${process.env.PUBLIC_URL}/${info.picture}`} alt="profile2" width="100" height="100" /></Col>
                 <Col>{info.nickname}<br />{info.message}</Col>
                 <Col >{info.timeStamp}</Col>
             </Row>
         </Container>
     )
 }
-export function SideBar(props) {
-    console.log("23:")
-    console.log(props)
-    const [chatsInfos, setChatsInfos] = useState(props.props);
-    console.log("25:")
-
-    console.log(chatsInfos)
+export function ChatsNavigation(props) {
+    const [chatsInfos, setChatsInfos] = useState(props.data.usersInfo);
+    const [users, setusers] = useState(props.data.users);
+    const [userMessages, setuserMessages] = useState(props.data.userMessages);
     return (
-        <ButtonGroup vertical>
-            {chatsInfos.map((chatsInfosData) => {
-                console.log("24:")
-                console.log(chatsInfosData)
-                return (
-                    <Button>
-                        <ChatInfo data={chatsInfosData} />
-                    </Button>
-                );
-            })}
-        </ButtonGroup>
+        <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+            <Row>
+                <Col>
+                    <Nav variant="pills" className="flex-column">
+                        {chatsInfos.map((chatsInfosData) => {
+                            return (
+                                <Nav.Item>
+                                    <Nav.Link eventKey={chatsInfosData.username}>
+                                        <ChatInfo data={chatsInfosData} />
+                                    </Nav.Link>
+                                </Nav.Item>
+                            );
+                        })}
+                    </Nav>
+                </Col>
+                <Col>
+                    <Tab.Content>
+                        {chatsInfos.map((chatsInfosData) => {
+                            return (
+                                <Tab.Pane eventKey={chatsInfosData.username}>
+                                    <MessageWindow data={userMessages[chatsInfosData.username]} />
+                                </Tab.Pane>);
+                        })}
+                    </Tab.Content>
+                </Col>
+            </Row>
+        </Tab.Container>
     )
 }

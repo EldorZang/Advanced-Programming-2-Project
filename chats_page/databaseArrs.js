@@ -60,19 +60,19 @@ export function UsersInfo() {
         "user1": {
             nickname: "user1Rocks",
             password: "user1pass",
-            profile:    "./images/profile_1.jpg",
+            profile:    "profile_1.jpg",
             friends: ["user2", "user3"]
         },
         "user2": {
             nickname: "user2Rocks",
             password: "user2pass",
-            profile:    "./profile_1.jpg",
+            profile:    "profile_1.jpg",
             friends: ["user3"]
         },
         "user3": {
             nickname: "user3Rocks",
             password: "user3pass",
-            profile:    "./profile_1.jpg",
+            profile:    "profile_1.jpg",
             friends: []
         }
     });
