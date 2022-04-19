@@ -1,0 +1,20 @@
+.container {
+  max-width: '100%'
+}
+.message_image{
+  position: relative;
+  text-align: center;
+
+
+}
+.message_text{
+  display: "flex";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
