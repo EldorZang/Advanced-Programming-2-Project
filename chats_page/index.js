@@ -4,12 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {SideBar,ChatInfo,Message,Message_Window,Main_Page} from './ChatsPageComponents'
-
+import {SideBar,ChatInfo,Message,Message_Window,MainPage,Main} from './updated.js'
+import {Tmp} from './temp.js'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Main_Page />
+    <Main />
   </React.StrictMode>
 );
 

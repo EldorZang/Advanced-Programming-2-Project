@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import Button from 'react-bootstrap/Button'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -18,7 +18,9 @@ import TabContainer from 'react-bootstrap/TabContainer'
 import TabContent from 'react-bootstrap/TabContent'
 import TabPane from 'react-bootstrap/TabPane'
 import Nav from 'react-bootstrap/Nav'
+import Form from 'react-bootstrap/Form'
 function ResolveUserInfo(userName, users, userMessages) {
+    console.log(userMessages);
     let timeStamp = (userMessages[userMessages.length - 1]).timeStamp;
     let message, picture, nickname;
     if ((userMessages[userMessages.length - 1]).type === "text") {
@@ -37,33 +39,84 @@ function ResolveUserInfo(userName, users, userMessages) {
         "username": userName
     });
 }
+function Add_Message(msg, userSent, userRecv, userMessages, setuserMessages) {
+    console.log("before")
+    console.log(userMessages)
+    var newData = userMessages;
+    newData[userSent] = [...newData[userSent], {
+        recieved: false,
+        type: "text",
+        data: msg,
+        timeStamp: "16:09"
+    }]
+    newData[userRecv] = [...newData[userSent], {
+        recieved: true,
+        type: "text",
+        data: msg,
+        timeStamp: "16:09"
+    }]
+    console.log("after")
+    console.log(newData)
+    setuserMessages(newData)
+}
 export function Main_Page() {
     const [users, setusers] = useState(UsersInfo);
     const [userMessages, setuserMessages] = useState(MessagesInfo);
-    let usersInfo = [];
-    Object.keys(users).map((user) => {
+    const [userLogged, setuserLogged] = useState("user1");
+    const [textInput, settextInput] = useState("");
+    const handleMessageInputChange = (e) => {
+        e.preventDefault();
+        settextInput(e.target.value);
+    };
+    var usersInfo = [];
+    console.log(users);
+    console.log(userLogged);
+    console.log(users["user1"]["friends"]);
+    (users["user1"]["friends"]).map((user) => {
         usersInfo = [...usersInfo, ResolveUserInfo(user, users[user], userMessages[user])]
     })
+    const [activeUser, setactiveUser] = useState(usersInfo[0].username);
     return (
-        <Container >
-            <Row class="row g-0">
-                <Col ><ChatsNavigation data={
-                    {
-                        "usersInfo": usersInfo,
-                        "users": users,
-                        "userMessages": userMessages
-                    }} /></Col>
-            </Row>
-        </Container>
+        <div>
+            <Container >
+                <Row className="row g-0">
+                    <Col ><ChatsNavigation data={
+                        {
+                            "usersInfo": usersInfo,
+                            "users": users,
+                            "userMessages": userMessages,
+                            "setactiveUser": setactiveUser,
+                            "activeUser": activeUser,
+                            "loggedUser": userLogged
+                        }} /></Col>
+                </Row>
+                <Row>
+                    <Col></Col>
+                    <Col>
+
+                    </Col>
+                </Row>
+            </Container>
+
+                <Form.Group>
+                    <Form.Control
+                        value={textInput}
+                        type="text"
+                        onChange={handleMessageInputChange}>
+                    </Form.Control>
+                </Form.Group>
+
+        </div>
     )
 }
 export function MessageWindow(props) {
     const [messages, setMessages] = useState(props.data);
     return (
         <Container fluid='true'>
-            {messages.map((messageData) => {
+            {messages.map((messageData,index) => {
+
                 return (
-                    <Row>
+                    <Row key={index}>
                         <Message data={messageData.data} recieved={messageData.recieved} />
                     </Row>
                 );
@@ -87,9 +140,6 @@ export function Message(props) {
 
     )
 }
-function get_path(str) {
-    return str.data;
-}
 export function ChatInfo(props) {
     const [info, setInfo] = useState(props.data);
     return (
@@ -108,13 +158,17 @@ export function ChatsNavigation(props) {
     const [users, setusers] = useState(props.data.users);
     const [userMessages, setuserMessages] = useState(props.data.userMessages);
     return (
-        <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+
+        <Tab.Container id="left-tabs-example"
+            activeKey={props.activeUser}
+            onSelect={props.setactiveUser}
+            defaultActiveKey={props.activeUser}>
             <Row>
                 <Col>
                     <Nav variant="pills" className="flex-column">
-                        {chatsInfos.map((chatsInfosData) => {
+                        {chatsInfos.map((chatsInfosData,index) => {
                             return (
-                                <Nav.Item>
+                                <Nav.Item key={index}>
                                     <Nav.Link eventKey={chatsInfosData.username}>
                                         <ChatInfo data={chatsInfosData} />
                                     </Nav.Link>
@@ -125,9 +179,9 @@ export function ChatsNavigation(props) {
                 </Col>
                 <Col>
                     <Tab.Content>
-                        {chatsInfos.map((chatsInfosData) => {
+                        {chatsInfos.map((chatsInfosData,index) => {
                             return (
-                                <Tab.Pane eventKey={chatsInfosData.username}>
+                                <Tab.Pane key={index} eventKey={chatsInfosData.username}>
                                     <MessageWindow data={userMessages[chatsInfosData.username]} />
                                 </Tab.Pane>);
                         })}
@@ -135,5 +189,6 @@ export function ChatsNavigation(props) {
                 </Col>
             </Row>
         </Tab.Container>
+
     )
 }
