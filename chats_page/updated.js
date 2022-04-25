@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext, createContext, useEffect } from 'react';
+import React, { useState, useMemo, useContext, createContext, useEffect,useReducer } from 'react';
 import ReactDOM from 'react-dom/client';
 import Button from 'react-bootstrap/Button'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -19,6 +19,11 @@ import TabContent from 'react-bootstrap/TabContent'
 import TabPane from 'react-bootstrap/TabPane'
 import Nav from 'react-bootstrap/Nav'
 import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
+import ModalHeader from 'react-bootstrap/ModalHeader'
+import ModalTitle from 'react-bootstrap/ModalTitle'
+import ModalBody from 'react-bootstrap/ModalBody'
+import ModalFooter from 'react-bootstrap/ModalFooter'
 
 
 export const UsersContext = createContext(UsersInfo);
@@ -29,48 +34,199 @@ export const LoggedUserContext = createContext("user1");
 
 
 
+
 export function MainPage() {
 
-
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
     const { usersData, setUsersData } = useContext(UsersContext);
     const { messagesData, setMessagesData } = useContext(MessagesContext);
     const { contacts, setContacts } = useContext(ContactsContext);
     const { activeUser, setActiveUser } = useContext(ActiveUserContext);
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
+    const [textInput, setTextInput] = useState("");
     const handleMessageInputChange = (e) => {
         e.preventDefault();
-        // setTextInput(e.target.value);
+        setTextInput(e.target.value);
+        console.log(textInput);
     };
+    const handleMessageInputSubmit = (e) => {
+        var currTime = new Date().toLocaleString() + "";
+        e.preventDefault();
+        var newMessagesData = messagesData;
+        newMessagesData[loggedUser][activeUser] = [...newMessagesData[loggedUser][activeUser],{
+            recieved: false,
+            type: "text",
+            data: textInput,
+            timeStamp: currTime
+        }];
+        newMessagesData[activeUser][loggedUser] = [...newMessagesData[activeUser][loggedUser],{
+            recieved: true,
+            type: "text",
+            data: textInput,
+            timeStamp: currTime
+        }];
+        setMessagesData(newMessagesData);
+        var newContacts = contacts;
+        newContacts.map((contact) => {
+            if(contact.userName === activeUser){
+                contact.message = textInput;
+                contact.timeStamp = currTime;
+            }
+        })
+        setContacts(newContacts)
+        forceUpdate();
+        console.log(newMessagesData)
 
-    console.log(usersData);
-    console.log("!!!");
-    console.log(loggedUser);
-    console.log("!!!");
+    };
 
 
     return (
 
         <Container >
+            <Row>
+            <AddContactButton />
+            </Row>
             <Row className="row g-0">
-                    <Col ><ChatsNavigation /></Col>
+                <Col ><ChatsNavigation /></Col>
+
+            </Row>
+            <Row>
+                <Col>
+                    <Form onSubmit={handleMessageInputSubmit}
+                    >
+                        <Form.Group className="mb-3">
+                            <Form.Control
+                                value={textInput}
+                                type="text"
+                                onChange={handleMessageInputChange}
+                                placeholder="Enter a message">
+                            </Form.Control>
+                        </Form.Group>
+                        <Button variant="primary" type="submit" >
+                            Send
+                        </Button>
+                    </Form>
+
+                </Col>
+            </Row>
+            <Row>
+                <AddFileButton />
             </Row>
         </Container>
 
 
     )
 }
+function AddContactModal(props) {
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const { usersData, setUsersData } = useContext(UsersContext);
+    const { messagesData, setMessagesData } = useContext(MessagesContext);
+    const { contacts, setContacts } = useContext(ContactsContext);
+    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
+    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
+    const [ formText, setFormText ] = useState("");
+    const ResolveUserInfo = (userName) => {
+        console.log(userName)
+        var recentMsgId = (messagesData[loggedUser])[userName].length - 1;
+        var recentMsg = messagesData[loggedUser][userName][recentMsgId];
+        var timeStamp = recentMsg.timeStamp;
+        var recentMessage, picture, nickName;
+        if (recentMsg.type === "text") {
+            recentMessage = recentMsg.data
+        }
+        else {
+            recentMessage = recentMsg.type
+        }
+        picture = usersData[userName].profile
+        nickName = usersData[userName].nickName
+        return ({
+            "timeStamp": timeStamp,
+            "message": recentMessage,
+            "picture": picture,
+            "nickName": nickName,
+            "userName": userName
+        });
+    }
+    const handleFormInputChange = (e) => {
+        e.preventDefault();
+        setFormText(e.target.value);
+        console.log(formText)
+    };
+    const handleFormInputSubmit = (e) => {
+        e.preventDefault();
+        var newUsersData = usersData;
+        newUsersData[loggedUser]["friends"] = [...newUsersData[loggedUser]["friends"],formText];
+        setUsersData(newUsersData);
+       var newContacts = contacts;
+       setContacts([...contacts, ResolveUserInfo(formText)])
+       props.onHide();
+    };
+
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+                  <Form>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Add New Contact
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Contact's Identfier</Form.Label>
+              <Form.Control
+                                                value={formText}
+                                                type="text"
+                                                onChange={handleFormInputChange}
+              />
+            </Form.Group>
+          
+        </Modal.Body>
+        <Modal.Footer>
+        <Button variant="primary" onClick={handleFormInputSubmit}>Add</Button>
+          
+        </Modal.Footer>
+        </Form>
+      </Modal>
+    );
+  }
+
+  function AddContactButton() {
+    const [modalShow, setModalShow] = React.useState(false);
+  
+    return (
+      <>
+        <Button variant="primary" onClick={() => setModalShow(true)}>
+          +
+        </Button>
+  
+        <AddContactModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
+      </>
+    );
+  }
+
+
+
 export function ChatsNavigation(props) {
     const { usersData, setUsersData } = useContext(UsersContext);
     const { messagesData, setMessagesData } = useContext(MessagesContext);
     const { contacts, setContacts } = useContext(ContactsContext);
     const { activeUser, setActiveUser } = useContext(ActiveUserContext);
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
-    console.log("talala");
-    console.log(contacts);
+
 
     var handleOnSelect = (e) => {
         setActiveUser(e);
     }
+
     return (
         <Tab.Container id="left-tabs-example"
             activeKey={activeUser}
@@ -79,8 +235,7 @@ export function ChatsNavigation(props) {
             <Row>
                 <Col>
                     <Nav variant="pills" className="flex-column">
-                    {console.log("12345")}
-                        {console.log(contacts)}
+
                         {contacts.map((chatsInfosData, index) => {
                             return (
                                 <Nav.Item key={index}>
@@ -93,11 +248,12 @@ export function ChatsNavigation(props) {
                     </Nav>
                 </Col>
                 <Col>
+                
                     <Tab.Content>
                         {contacts.map((chatsInfosData, index) => {
                             return (
                                 <Tab.Pane key={index} eventKey={chatsInfosData.userName}>
-                                    <MessageWindow data={messagesData[chatsInfosData.userName]} />
+                                    <MessageWindow data={messagesData[loggedUser][chatsInfosData.userName]} />
                                 </Tab.Pane>);
                         })}
                     </Tab.Content>
@@ -126,7 +282,7 @@ export function MessageWindow(props) {
             {messages.map((messageData, index) => {
                 return (
                     <Row key={index}>
-                        <Message data={messageData.data} recieved={messageData.recieved} />
+                        <Message data={messageData.data} recieved={messageData.recieved} type={messageData.type} />
                     </Row>
                 );
             })}
@@ -141,6 +297,7 @@ export function Message(props) {
     else {
         image = message_sent;
     }
+    if (props.type === "text"){
     return (
         <div className="message_image" >
             <p className="message_text">{props.data}</p>
@@ -148,18 +305,30 @@ export function Message(props) {
         </div>
 
     )
+    }
+    if (props.type === "picture"){
+        console.log(props)
+        return (
+            <div className="message_image" >
+                <img src={props.file} className="message_text" width="50" height="50" />
+                <img src={image} alt="Info" width="200" height="50" />
+            </div>
+    
+        )
+        }
 }
 export function Main() {
-      const ResolveUserInfo = (userName)=> {
-        console.log(messagesData);
-        var recentMsgId = messagesData[userName].length - 1;
-        var timeStamp = (messagesData[userName][recentMsgId]).timeStamp;
+    const ResolveUserInfo = (userName) => {
+
+        var recentMsgId = (messagesData[loggedUser])[userName].length - 1;
+        var recentMsg = messagesData[loggedUser][userName][recentMsgId];
+        var timeStamp = recentMsg.timeStamp;
         var recentMessage, picture, nickName;
-        if ((messagesData[userName][recentMsgId]).type === "text") {
-            recentMessage = messagesData[userName][recentMsgId].data
+        if (recentMsg.type === "text") {
+            recentMessage = recentMsg.data
         }
         else {
-            recentMessage = messagesData[userName][recentMsgId].type
+            recentMessage = recentMsg.type
         }
         picture = usersData[userName].profile
         nickName = usersData[userName].nickName
@@ -173,18 +342,15 @@ export function Main() {
     }
     const [usersData, setUsersData] = useState(UsersInfo);
     const [messagesData, setMessagesData] = useState(MessagesInfo);
-    const [activeUser, setActiveUser] = useState("user2");
+    const [activeUser, setActiveUser] = useState("");
     const [loggedUser, setLoggedUser] = useState("user1");
-    console.log(messagesData);
+
     var chatUsersSideBarInfo = [];
     ((usersData[loggedUser])["friends"]).map((user) => {
-        console.log("444");
 
-        console.log(messagesData);
         chatUsersSideBarInfo = [...chatUsersSideBarInfo, ResolveUserInfo(user)]
     })
-        console.log("insideuseeffect");
-        console.log(chatUsersSideBarInfo);
+
     const [contacts, setContacts] = useState(chatUsersSideBarInfo);
 
 
@@ -201,3 +367,81 @@ export function Main() {
         </MessagesContext.Provider>
     </UsersContext.Provider>)
 }
+
+
+
+function AddFileModal(props) {
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const { usersData, setUsersData } = useContext(UsersContext);
+    const { messagesData, setMessagesData } = useContext(MessagesContext);
+    const { contacts, setContacts } = useContext(ContactsContext);
+    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
+    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
+    const [ fileUploaded, setFileUploaded ] = useState();
+   
+    const handleFileInputChange = (e) => {
+        e.preventDefault();
+        setFileUploaded(URL.createObjectURL(e.target.files[0]))
+        console.log(e.target.files[0])
+        var newMessagesData = messagesData;
+        var currTime = new Date().toLocaleString() + "";
+
+        newMessagesData[loggedUser][activeUser] = [...newMessagesData[loggedUser][activeUser],{
+            recieved: false,
+            type: "picture",
+            data: "",
+            timeStamp: currTime,
+            file: fileUploaded
+        }];
+        newMessagesData[activeUser][loggedUser] = [...newMessagesData[activeUser][loggedUser],{
+            recieved: true,
+            type: "picture",
+            data: "",
+            timeStamp: currTime,
+            file: fileUploaded
+        }];
+        setMessagesData(newMessagesData);
+        console.log(newMessagesData)
+        forceUpdate();
+       props.onHide();
+    };
+
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+
+        <Modal.Body>
+        <input type="file" onChange={handleFileInputChange} />
+  </Modal.Body>
+      </Modal>
+    );
+  }
+
+  function AddFileButton() {
+    const [modalShow, setModalShow] = React.useState(false);
+  
+    return (
+      <>
+        <Button variant="primary" onClick={() => setModalShow(true)}>
+          Picture
+        </Button>
+  
+        <AddFileModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
+      </>
+    );
+  }
+
+
+
+
+
+
+
+
