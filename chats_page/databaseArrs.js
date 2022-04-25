@@ -8,14 +8,14 @@ export function MessagesInfo() {
                 type: "text",
                 data: "wow1",
                 timeStamp: "11:02",
-                file: {}
+                file: ""
             },
             {
                 recieved: false,
                 type: "text",
                 data: "wow2",
                 timeStamp: "12:02",
-                file: {}
+                file: ""
             },
             ],
             "user3": [{
@@ -23,14 +23,14 @@ export function MessagesInfo() {
                 type: "text",
                 data: "yay1",
                 timeStamp: "17:02",
-                file: {}
+                file: ""
             },
             {
                 recieved: true,
                 type: "text",
                 data: "yay2",
                 timeStamp: "18:02",
-                file: {}
+                file: ""
             }
             ]
         },
@@ -40,14 +40,14 @@ export function MessagesInfo() {
                 type: "text",
                 data: "wow1",
                 timeStamp: "11:02",
-                file: {}
+                file: ""
             },
             {
                 recieved: true,
                 type: "text",
                 data: "wow2",
                 timeStamp: "12:02",
-                file: {}
+                file: ""
             }
             ],
             "user3": {
@@ -56,14 +56,14 @@ export function MessagesInfo() {
                     type: "text",
                     data: "wow1",
                     timeStamp: "11:02",
-                    file: {}
+                    file: ""
                 },
                 {
                     recieved: true,
                     type: "text",
                     data: "wow2",
                     timeStamp: "12:02",
-                    file: {}
+                    file: ""
                 }
                 ]
             }
@@ -81,7 +81,7 @@ export function UsersInfo() {
             nickName: "user1Rocks",
             password: "user1pass",
             profile: "profile_1.jpg",
-            friends: ["user2"]
+            friends: ["user2","user3"]
         },
         "user2": {
             nickName: "user2Rocks",

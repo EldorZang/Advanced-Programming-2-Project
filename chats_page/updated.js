@@ -282,7 +282,7 @@ export function MessageWindow(props) {
             {messages.map((messageData, index) => {
                 return (
                     <Row key={index}>
-                        <Message data={messageData.data} recieved={messageData.recieved} type={messageData.type} />
+                        <Message data={messageData.data} recieved={messageData.recieved} type={messageData.type} file={messageData.file} />
                     </Row>
                 );
             })}
@@ -306,11 +306,11 @@ export function Message(props) {
 
     )
     }
-    if (props.type === "picture"){
+    else if (props.type === "picture"){
         console.log(props)
         return (
             <div className="message_image" >
-                <img src={props.file} className="message_text" width="50" height="50" />
+                <img alt="not fount" width={"250px"} src={URL.createObjectURL(props.file)} />
                 <img src={image} alt="Info" width="200" height="50" />
             </div>
     
@@ -379,9 +379,9 @@ function AddFileModal(props) {
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
     const [ fileUploaded, setFileUploaded ] = useState();
    
-    const handleFileInputChange = (e) => {
+    function handleFileInputChange  (e)  {
         e.preventDefault();
-        setFileUploaded(URL.createObjectURL(e.target.files[0]))
+        setFileUploaded(e.target.files[0])
         console.log(e.target.files[0])
         var newMessagesData = messagesData;
         var currTime = new Date().toLocaleString() + "";
@@ -413,7 +413,7 @@ function AddFileModal(props) {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-
+          <img src={fileUploaded} />
         <Modal.Body>
         <input type="file" onChange={handleFileInputChange} />
   </Modal.Body>
