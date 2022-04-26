@@ -17,6 +17,13 @@ export function MessagesInfo() {
                 timeStamp: "12:02",
                 file: ""
             },
+            {
+                recieved: false,
+                type: "picture",
+                data: "",
+                timeStamp: "12:02",
+                file: process.env.PUBLIC_URL + '/sendIcon.png'
+            }
             ],
             "user3": [{
                 recieved: false,
@@ -48,6 +55,13 @@ export function MessagesInfo() {
                 data: "wow2",
                 timeStamp: "12:02",
                 file: ""
+            },
+            {
+                recieved: true,
+                type: "picture",
+                data: "",
+                timeStamp: "12:02",
+                file: "process.env.PUBLIC_URL + '/sendIcon.png'"
             }
             ],
             "user3": {

@@ -5,6 +5,7 @@
     Justify-Content: right;
     text-align: right;
     display: flex;
+    flex-flow:row wrap;
   }
   .recv_message_bubble{
     position: relative;
@@ -15,10 +16,18 @@
 
     
   }
-  .recv_message_data{
+  .recv_message_data_text{
     display: "flex";
     position: absolute;
     text-align: left;
+    padding-left: 10px;
+    vertical-align: middle;
+  }
+  .recv_message_data_file{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+    vertical-align: middle;
   }
   .sent_message{
     Justify-Content: left;
@@ -35,12 +44,23 @@
 
     
   }
-  .sent_message_data{
+  .sent_message_data_text{
     display: "flex";
     position: absolute;
     text-align: left;
     vertical-align: middle;
+    line-height: 1.2;
+    padding-left: 10px;
   }
+  .sent_message_data_file{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+    vertical-align: middle;
+    line-height: 1.2;
+    padding-bottom: 25px;
+  }
+
 .msgTime{
   display: "flex";
   position: absolute;
@@ -66,6 +86,7 @@
   .messageWindow{
     overflow-y: auto; 
     height:400px;
+    width: 100%;
   }
   .userBar{
     display: inline-block;
@@ -111,7 +132,34 @@
 .recordingModal{
   text-align: center;
 }
-.d-flex align-items-end{
-  background: none;
+.noBackGround{
+  background: none !important;
+  border: none;
 }
-  
+.whiteBackGround{
+  background: #FFFFFF !important;
+}
+.noBorder{
+  border: none !important;
+}
+.text-align-right{
+  text-align: right;
+}
+
+.align-left{
+  text-align: left;
+
+}
+.align-right{
+  text-align: right;
+
+}
+.align-center{
+  text-align: center;
+
+}
+.loggedUserInfo{
+  font-Size: 25px;
+  background: #c1a486;
+  vertical-align: middle;
+}

@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import bg from './background.png';
+
 import '../../App.css';
 
 export default function LoginPage({usermap, setCurrent}) {
@@ -58,7 +60,8 @@ export default function LoginPage({usermap, setCurrent}) {
     }
 
     return (
-        <body>
+
+        <body style={background}>
             <div className="center-text font-white font-large">
                 <h2>Login Page</h2>
                 <form onSubmit={submitHandler}>
@@ -87,4 +90,14 @@ export default function LoginPage({usermap, setCurrent}) {
             </div>
         </body>
     )
+}
+
+
+const background = {
+    width: "100%",
+    height: "100vh",
+    background: `url(${bg})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover"
 }
