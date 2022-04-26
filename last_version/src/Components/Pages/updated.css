@@ -1,0 +1,117 @@
+.container {
+    max-width: '100%'
+  }
+  .recv_message{
+    Justify-Content: right;
+    text-align: right;
+    display: flex;
+  }
+  .recv_message_bubble{
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    
+  }
+  .recv_message_data{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+  }
+  .sent_message{
+    Justify-Content: left;
+    text-align: left;
+    display: flex;
+    flex-flow:row wrap;
+  }
+  .sent_message_bubble{
+    position: relative;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    
+  }
+  .sent_message_data{
+    display: "flex";
+    position: absolute;
+    text-align: left;
+    vertical-align: middle;
+  }
+.msgTime{
+  display: "flex";
+  position: absolute;
+  align-items: right !important;
+  justify-content: right;
+  text-align: right;
+  vertical-align: middle;
+}
+
+
+
+
+
+  p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+ 
+  .btn:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  .messageWindow{
+    overflow-y: auto; 
+    height:400px;
+  }
+  .userBar{
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    text-align: center;
+}
+  
+  .addButton{
+    position: absolute;
+    right: -7px;
+
+  }
+  .background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .nav-tabs .nav-link {
+    background-color: transparent !important;
+    color: #FFFFFF !important;
+    background-color: #198754 !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  
+  .nav-tabs .nav-link.active {
+    border-bottom: solid 4px white !important;
+  }
+  .nav.nav-tabs .nav-link.active {
+    background-color: #009b53 !important;
+}
+.nav.nav-pills .nav-link.active {
+  background-color: #009b53 !important;}
+  .nav-link{
+    color: #FFFFFF !important;
+    background-color: #014123 !important;
+  }
+.recordingModal{
+  text-align: center;
+}
+.d-flex align-items-end{
+  background: none;
+}
+  
