@@ -23,20 +23,25 @@ export const LoggedUserContext = createContext("user1");
 export const forceUpdateContext = createContext("");
 
 export function MainPage() {
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const { forceUpdate, setForceUpdate } = useContext(forceUpdateContext);
     const { usersData, setUsersData } = useContext(UsersContext);
     const { messagesData, setMessagesData } = useContext(MessagesContext);
     const { contacts, setContacts } = useContext(ContactsContext);
     const { activeUser, setActiveUser } = useContext(ActiveUserContext);
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
     const [textInput, setTextInput] = useState("");
+    const [showModal, setShowModal] = useState(false);
     const handleMessageInputChange = (e) => {
         e.preventDefault();
         setTextInput(e.target.value);
     };
     const handleMessageInputSubmit = (e) => {
-        var currTime = new Date().toLocaleString() + "";
         e.preventDefault();
+        if(activeUser === ""){
+            setShowModal(true);
+            return;
+        }
+        var currTime = new Date().toLocaleString() + "";
         var newMessagesData = messagesData;
         newMessagesData[loggedUser][activeUser] = [...newMessagesData[loggedUser][activeUser], {
             recieved: false,
@@ -60,8 +65,9 @@ export function MainPage() {
         })
         setContacts(newContacts)
         setTextInput("");
-        forceUpdate();
+        setForceUpdate(new Date().toLocaleString() + "" + getRandomNum());
     };
+    console.log(messagesData);
     return (
         <Container >
             <Row>
@@ -102,18 +108,26 @@ export function MainPage() {
             </Row>
             <Row>
             </Row>
+            <AlertModal showModal={showModal} setShowModal={setShowModal} />
         </Container>
     )
 }
 function AddContactModal(props) {
-    const [, forceUpdate] = useReducer(x => x + 1, 0);
     const { usersData, setUsersData } = useContext(UsersContext);
     const { messagesData, setMessagesData } = useContext(MessagesContext);
     const { contacts, setContacts } = useContext(ContactsContext);
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);
     const [formText, setFormText] = useState("");
     const ResolveUserInfo = (userName) => {
-        //update case for users without chat history
+        if(messagesData[loggedUser][userName].length == 0){
+            return ({
+                "timeStamp": "",
+                "message": "",
+                "picture": usersData[userName].profile,
+                "nickName": usersData[userName].nickName,
+                "userName": userName
+            });
+        }
         var recentMsgId = (messagesData[loggedUser])[userName].length - 1;
         var recentMsg = messagesData[loggedUser][userName][recentMsgId];
         var timeStamp = recentMsg.timeStamp;
@@ -330,6 +344,15 @@ export function Message(props) {
 }
 export function Main({usersMap,loggedUsername}) {
     const ResolveUserInfo = (userName) => {
+        if(messagesData[loggedUser][userName].length == 0){
+            return ({
+                "timeStamp": "",
+                "message": "",
+                "picture": usersData[userName].profile,
+                "nickName": usersData[userName].nickName,
+                "userName": userName
+            });
+        }
         var recentMsgId = (messagesData[loggedUser])[userName].length - 1;
         var recentMsg = messagesData[loggedUser][userName][recentMsgId];
         var timeStamp = recentMsg.timeStamp;
@@ -362,20 +385,22 @@ export function Main({usersMap,loggedUsername}) {
     const [forceUpdate, setForceUpdate] = useState("temp");
     console.log(usersMap)
 console.log(usersData)
+const addNewUser = (newUser) =>{
+    var newMessagesData = messagesData;
+    var newUserKeyEntry = {};
+    Object.keys(messagesData).forEach((currUser) => {
+        var newUserEntry = {newUser : []};
+        newUserKeyEntry[currUser]= [];
+        newMessagesData[currUser][newUser] =[];   
+        });
+        newMessagesData[newUser] = newUserKeyEntry;
+    setMessagesData(newMessagesData);
+}
     const addNewUsers = () =>{
         var userDataCopy = usersData;
         Object.keys(usersData).forEach((user) => {
             if(!messagesData.hasOwnProperty(user)){
-                var newMessagesData = messagesData;
-                var newUserEntry = {};
-                Object.keys(userDataCopy).forEach((currUser) => {
-                    newUserEntry[currUser] = [];
-                    newMessagesData[currUser]={};
-                    newMessagesData[currUser][user] = [];
-                });
-                newMessagesData[user] = newUserEntry;
-                
-                setMessagesData(newMessagesData);
+                addNewUser(user);
             }
         })
     }
@@ -384,6 +409,8 @@ console.log(usersData)
     addNewUsers();
     var chatUsersSideBarInfo = [];
     console.log(usersData);
+    console.log(messagesData);
+
     console.log(loggedUser);
     
 
@@ -411,7 +438,6 @@ console.log(usersData)
 }
 
 function AddFileModal(props) {
-    const [, forceUpdate1] = useReducer(x => x + 1, 0);
     const { usersData, setUsersData } = useContext(UsersContext);
     const { messagesData, setMessagesData } = useContext(MessagesContext);
     const { contacts, setContacts } = useContext(ContactsContext);
@@ -442,7 +468,7 @@ function AddFileModal(props) {
             file: url
         }];
         setMessagesData(newMessagesData);
-        setForceUpdate(currTime);
+        setForceUpdate(currTime + " " + getRandomNum());
         props.onHide();
     };
     return (
@@ -459,16 +485,28 @@ function AddFileModal(props) {
 }
 function AddFileButton(props) {
     const [modalShow, setModalShow] = React.useState(false);
+    const [alertModalShow, setAlertModalShow] = useState(false);
+    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
+    const handleClick = () =>{
+        if(activeUser === ""){
+            setAlertModalShow(true);
+        }
+        else{
+            setModalShow(true)
+        }
+    }
+
     var icon = props.type + "Icon.png";
     return (
         <>
-            <Button variant="success" onClick={() => setModalShow(true)}>
+            <Button variant="success" onClick={handleClick}>
                 <img src={process.env.PUBLIC_URL + '/' + icon} height="35" width="35" alt={props.type} />
             </Button>
             <AddFileModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}
                 type={props.type}/>
+            <AlertModal showModal={alertModalShow} setShowModal={setAlertModalShow} />
         </>
     );
 }
@@ -555,13 +593,23 @@ function RecordAudioModal(props) {
 }
 function RecordAudioButton() {
     const [modalShow, setModalShow] = useState(false);
+    const [alertModalShow,setAlertModalShow] = useState(false);
     const { forceUpdate, setForceUpdate } = useContext(forceUpdateContext);
+    const { activeUser, setActiveUser } = useContext(ActiveUserContext);
+    const handleClick = () =>{
+        if(activeUser === ""){
+            setAlertModalShow(true);
+        }
+        else{
+            setModalShow(true)
+        }
+    }
     const update = (e) => {
-        setForceUpdate(new Date().toLocaleString() + "");
+        setForceUpdate(new Date().toLocaleString() + "" + getRandomNum);
     }
     return (
         <>
-            <Button class="btn btn-outline-success" variant="success" onClick={() => setModalShow(true)}>
+            <Button class="btn btn-outline-success" variant="success" onClick={handleClick}>
                 <img src={process.env.PUBLIC_URL + '/audioIcon.png'} height="35" width="35" alt="Record" />
             </Button>
             <RecordAudioModal
@@ -569,6 +617,33 @@ function RecordAudioButton() {
                 onHide={() => setModalShow(false)}
                 onExited={update}
             />
+            <AlertModal showModal={alertModalShow} setShowModal={setAlertModalShow} />
+ 
         </>
     );
 }
+function getRandomNum(){
+     var fromRang = 1;
+     var toRange = 1000;
+     var rand = fromRang + Math.random() * (toRange - fromRang);
+    return rand;
+}
+function AlertModal(props) {
+    return (
+      <>
+        <Modal
+          size="sm"
+          show={props.showModal}
+          onHide={() => props.setShowModal(false)}
+          aria-labelledby="example-modal-sizes-title-sm"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-modal-sizes-title-sm">
+            Error
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Please choose a contact first.</Modal.Body>
+        </Modal>
+      </>
+    );
+  }
