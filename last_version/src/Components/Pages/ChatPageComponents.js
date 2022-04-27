@@ -15,7 +15,7 @@ import message_sent from "./images/sent_message.png";
 import message_recv from "./images/recv_message.png";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './updated.css'
+import './chatPage.css'
 
 // Contexts for accessing global variables without passing each time as props
 export const UsersContext = createContext(UsersInfo);
@@ -103,7 +103,6 @@ export function Main({ usersMap, loggedUsername }) {
         chatUsersSideBarInfo = [...chatUsersSideBarInfo, ResolveUserInfo(user)]
     })
     const [contacts, setContacts] = useState(chatUsersSideBarInfo);
-    console.log(usersData)
     return (
         <forceUpdateContext.Provider value={{ forceUpdate, setForceUpdate }}>
             <UsersContext.Provider value={{ usersData, setUsersData }}>
@@ -220,7 +219,7 @@ function UserInfo(){
     return(
         <Container >
             <Row className="loggedUserInfo">
-                <Col className="align-left "><img src={usersData[loggedUser]["picture"]} alt="loggedUser's picture"
+                <Col className="align-left "><img src={usersData[loggedUser]["profile"]} alt="loggedUser's picture"
                 width="50" height="50"/></Col>
                 <Col className="align-center d-flex align-items-center justify-content-center"><p>{loggedUser}</p></Col>
                 <Col className="align-right"><AddContactButton className="addButton" /> </Col>
@@ -255,8 +254,8 @@ export function ChatsNavigation() {
             onSelect={handleOnSelect}
             defaultActiveKey={activeUser}>
             <Row>
-                <Col>
-                    <Nav variant="pills" className="flex-column">
+                <Col className="contactsBar">
+                    <Nav variant="pills" className="flex-column nav nav-tabs">
                         {contacts.map((chatsInfosData, index) => {
                             return (
                                 <Nav.Item key={index}>
@@ -286,12 +285,12 @@ export function ChatInfo(props) {
     var recentMsg =info.message;
     // Splitting to more than one line if message is too long.
     if(recentMsg.length > 25){
-        recentMsg = recentMsg.replace(/(.{25})/g,"$1\n")
+       // recentMsg = recentMsg.replace(/(.{25})/g,"$1\n")
     }
     return (
         <Container fluid='true'>
             <Row>
-                <Col ><img src={`${process.env.PUBLIC_URL}/${info.picture}`} alt="profile2" width="100" height="100" /></Col>
+                <Col ><img src={info.picture} alt="profile2" width="100" height="100" /></Col>
                 <Col>{info.nickName}<br />{recentMsg}</Col>
                 <Col >{info.timeStamp}</Col>
             </Row>
@@ -362,7 +361,7 @@ export function Message(props) {
                 }else if(numberOfLines > 1){
                     bubbleWidth = 10 * 35 + 15
                      // Adding new lines every 35 chars.
-                    msgText = msgText.replace(/(.{35})/g,"$1\n")
+                    //msgText = msgText.replace(/(.{35})/g,"$1\n")
                 }
                 else{
                     bubbleWidth = 11 * props.data.length;

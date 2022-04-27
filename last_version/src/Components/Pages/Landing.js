@@ -21,7 +21,7 @@ export default function LandingPage() {
 }
 
 const background = {
-    width: "100%",
+    width: "100vw",
     height: "100vh",
     background: `url(${bg})`,
     backgroundPosition: "center",

@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import { UsersContext, MessagesContext, ContactsContext, ActiveUserContext, LoggedUserContext, forceUpdateContext } from './ChatPageComponents.js'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './updated.css'
+import './chatPage.css'
 
 export function AlertModal(props) {
     return (
@@ -72,15 +72,15 @@ export function RecordAudioModal(props) {
             }];
             setMessagesData(newMessagesData);
 
-        // Update contacts database.
-        var newContacts = contacts;
-        newContacts.map((chatsInfosData)=>{
-            if(activeUser === chatsInfosData.userName){
-                chatsInfosData["message"] = "recording";
-                chatsInfosData["timeStamp"] = currTime;
-            }
-        });
-        setContacts(newContacts);
+            // Update contacts database.
+            var newContacts = contacts;
+            newContacts.map((chatsInfosData) => {
+                if (activeUser === chatsInfosData.userName) {
+                    chatsInfosData["message"] = "recording";
+                    chatsInfosData["timeStamp"] = currTime;
+                }
+            });
+            setContacts(newContacts);
 
         };
         recorder.addEventListener("dataavailable", saveRecording);
@@ -105,7 +105,8 @@ export function RecordAudioModal(props) {
             centered>
             <Modal.Body className="recordingModal">
                 <Button variant="success" onClick={(e) => {
-                    handleRecording(e);}}>
+                    handleRecording(e);
+                }}>
                     {isRecording ? 'Stop Recording' : 'Start Recording'}
                 </Button>
             </Modal.Body>
@@ -147,8 +148,8 @@ export function AddFileModal(props) {
 
         // Update contacts database.
         var newContacts = contacts;
-        newContacts.map((chatsInfosData)=>{
-            if(activeUser === chatsInfosData.userName){
+        newContacts.map((chatsInfosData) => {
+            if (activeUser === chatsInfosData.userName) {
                 chatsInfosData["message"] = fileType;
                 chatsInfosData["timeStamp"] = currTime;
             }
@@ -207,10 +208,10 @@ export function AddContactModal(props) {
             "userName": userName
         });
     }
-    const doesExistContact = (user) =>{
+    const doesExistContact = (user) => {
         var exist = false;
-        contacts.map((currContact)=>{
-            if(currContact.userName === user){
+        contacts.map((currContact) => {
+            if (currContact.userName === user) {
                 exist = true;
             }
         })
@@ -221,17 +222,17 @@ export function AddContactModal(props) {
         setFormText(e.target.value);
     };
     const handleFormInputSubmit = (e) => {
-        e.preventDefault(); 
-        if(formText === loggedUser){
+        e.preventDefault();
+        if (formText === loggedUser) {
             setErrorText("Can't add the currently logged user as a new contact.");
         }
-        else if(!usersData.hasOwnProperty(formText)){
+        else if (!usersData.hasOwnProperty(formText)) {
             setErrorText("User doesn't exist.");
         }
-        else if( doesExistContact(formText) ){
+        else if (doesExistContact(formText)) {
             setErrorText("User already added to contact's list.");
         }
-        else{
+        else {
             setErrorText("");
             var newUsersData = usersData;
             newUsersData[loggedUser]["friends"] = [...newUsersData[loggedUser]["friends"], formText];
@@ -260,8 +261,8 @@ export function AddContactModal(props) {
                         <Form.Control
                             value={formText}
                             type="text"
-                            onChange={handleFormInputChange} 
-                            />
+                            onChange={handleFormInputChange}
+                        />
                     </Form.Group>
                     <div className="text-danger">{errorText}</div>
                 </Modal.Body>

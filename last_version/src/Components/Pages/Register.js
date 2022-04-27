@@ -110,7 +110,6 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
         newUser["userName"] = registerData.username;
         newUser["nickName"] = registerData.nickname;
         newUser["password"] = registerData.password;
-        console.log(registerData)
         if (registerData.photo !== null) {
             newUser["picture"] = registerData.photo;
         } else {
