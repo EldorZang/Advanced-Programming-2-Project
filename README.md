@@ -2,7 +2,7 @@
 Dor Sror, 207271875  
 Eldor Zang, 315232942  
 # Messaging Platform
-This project is a messaging platform.  
+This project is a messaging platform built with React.  
 Includes: Home, Login, Register and Chat pages.  
 Supported message formats: Text, Photos, Videos and Recordings.  
 # Existing users:
@@ -24,10 +24,11 @@ All can be installed with the command:
 1. Create a new project:  
 
 `npx create-react-app projectname`  
-
 2. Copy both src and public folders to project directory (over-write new files).  
-3. In the project directory run:  
-
+3. Navigate to the project directory:  
+`cd projectname`  
+4. Install dependencies (JQuery, Bootstrap, React-Bootstrap and React-Router):  
+`npm install react-bootstrap bootstrap react-router-dom jquery --save`
+5. Start React:
 `npm start`  
-
-4. Navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.
+6. Navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.
