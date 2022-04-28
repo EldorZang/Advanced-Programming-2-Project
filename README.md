@@ -22,6 +22,6 @@ frank123 | Frank | frank_pass | bob123
 `cd projectname`  
 4. Install dependencies (JQuery, Bootstrap, React-Bootstrap and React-Router):  
 `npm install react-bootstrap bootstrap react-router-dom jquery --save`
-5. Start React:
+5. Start React:  
 `npm start`  
 6. Navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.
