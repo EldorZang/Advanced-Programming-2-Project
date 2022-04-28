@@ -18,11 +18,16 @@ frank123 | Frank | frank_pass | bob123
 JQuery, Bootstrap, React-Bootstrap and React-Router were used in this project.  
 All can be installed with the command:  
 
-`npm install react-bootstrap bootstrap react-router-dom jquery`
+`npm install react-bootstrap bootstrap react-router-dom jquery --save`
 
-(If the project has been already created before installing, these must be added - can be done with yarn:  
-`yarn add react-bootstrap bootstrap react-router-dom jquery`)
 # Running
-In the project directory, you can run:  
-`npm start`
-Than navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.
+1. Create a new project:  
+
+`npx create-react-app projectname`  
+
+2. Copy both src and public folders to project directory (over-write new files).  
+3. In the project directory run:  
+
+`npm start`  
+
+4. Navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.
