@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import '../../App.css';
 import userdef from '../../userdef.png';
+import bg from './background.png';
 
 export default function RegisterPage({usermap, setUsermap, setCurrent}) {
     const [registerData, setRegisterData] = useState({
@@ -64,14 +65,11 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
     }
 
     const onPhotoChange = event => {
-        setRegisterData({ 
-            username: registerData.username,
-            nickname: registerData.nickname,
-            password: registerData.password,
-            validate: registerData.validate,
-            photo: event.target.files[0],
-            valid: registerData.valid
-        });
+        event.preventDefault();
+        var imgUrl = URL.createObjectURL(event.target.files[0]);
+        var newRegisterData = registerData;
+        newRegisterData["photo"] = imgUrl;
+        setRegisterData(newRegisterData);
         validateInfo();
     }
 
@@ -109,15 +107,17 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
         event.preventDefault();
         let newUser = {};
         let chatRefs = {};
-        newUser["username"] = registerData.username;
-        newUser["nickname"] = registerData.nickname;
+        newUser["userName"] = registerData.username;
+        newUser["nickName"] = registerData.nickname;
         newUser["password"] = registerData.password;
         if (registerData.photo !== null) {
-            newUser["photo"] = registerData.photo;
+            newUser["profile"] = registerData.photo;
         } else {
-            newUser["photo"] = userdef;
+            console.log(userdef)
+            newUser["profile"] = userdef;
         }
-        newUser["chats"] = chatRefs;
+       // newUser["chats"] = chatRefs;
+        newUser["friends"] = [];
         let newMap = usermap;
         newMap.set(registerData.username, newUser);
         setUsermap(newMap);
@@ -126,7 +126,8 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
     }
 
     return (
-        <div className="center-text font-white font-large">
+        <div style={background}>
+        <div className="center-text font-white font-large" >
             <h2>Register Page</h2>
             <form onSubmit={submitUser}>
                 <p>
@@ -156,10 +157,19 @@ export default function RegisterPage({usermap, setUsermap, setCurrent}) {
                     <button id="submit-btn" type="submit" disabled={!registerData.valid}>Register</button>
                 </p>
             </form>
-            <footer>
                 <p>Already have an account? <Link to="/login">Click Here</Link> to login!</p>
                 <p><Link to="/">Back to the Home Page</Link>.</p>
-            </footer>
+        </div>
         </div>
     );
+}
+
+
+const background = {
+    width: "100%",
+    height: "100%",
+    background: `url(${bg})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover"
 }

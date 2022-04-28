@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import bg from './background.png';
+
 import '../../App.css';
 
 export default function LoginPage({usermap, setCurrent}) {
@@ -58,7 +60,8 @@ export default function LoginPage({usermap, setCurrent}) {
     }
 
     return (
-        <body>
+
+        <body style={background}>
             <div className="center-text font-white font-large">
                 <h2>Login Page</h2>
                 <form onSubmit={submitHandler}>
@@ -72,7 +75,11 @@ export default function LoginPage({usermap, setCurrent}) {
                         <input className="logreg-input" type="password" id="password" required onChange={onPasswordChange} onBlur={validateInfo}/>
                     </p>
                     <p>
-                        <button id="submit-btn" type="submit" disabled={!loginData.valid}>Login</button>
+                    <Link to= '/home'>
+                        <button id="submit-btn" type="submit"
+                        disabled={!loginData.valid}
+                        onClick={() => setCurrent(loginData.username)}>Login</button>
+                        </Link>
                         <div className="text-danger">{error.errorList["invalid"]}</div>
                     </p>
                 </form>
@@ -83,4 +90,14 @@ export default function LoginPage({usermap, setCurrent}) {
             </div>
         </body>
     )
+}
+
+
+const background = {
+    width: "100%",
+    height: "100vh",
+    background: `url(${bg})`,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover"
 }
