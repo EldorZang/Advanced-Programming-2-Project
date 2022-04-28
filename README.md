@@ -24,4 +24,6 @@ frank123 | Frank | frank_pass | bob123
 `npm install react-bootstrap bootstrap react-router-dom jquery --save`
 5. Start React:  
 `npm start`  
-6. Navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.
+6. Navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.  
+
+Please note, that because In Google Chrome forms aren't automatically out of focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
