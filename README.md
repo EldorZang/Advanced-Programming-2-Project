@@ -14,12 +14,6 @@ oliver123 | Oliver | oliver_pass | bob123
 linda123 | Linda | linda_pass | bob123
 frank123 | Frank | frank_pass | bob123
 
-# Dependencies
-JQuery, Bootstrap, React-Bootstrap and React-Router were used in this project.  
-All can be installed with the command:  
-
-`npm install react-bootstrap bootstrap react-router-dom jquery --save`
-
 # Running
 1. Create a new project:  
 `npx create-react-app projectname`  
