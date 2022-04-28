@@ -34,6 +34,8 @@ export function RecordAudioModal(props) {
     const { contacts, setContacts } = useContext(ContactsContext);
     const [isRecording, setIsRecording] = useState(false);
     const [recorder, setRecorder] = useState(null);
+    const [ recvUser, setRecvUser ] = useState("");
+
     async function requestRecorder() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         return new MediaRecorder(stream);
@@ -54,15 +56,14 @@ export function RecordAudioModal(props) {
             var url = URL.createObjectURL(e.data);
             var newMessagesData = messagesData;
             var currTime = new Date().toLocaleString() + "";
-            var fileType = props.type;
-            newMessagesData[loggedUser][activeUser] = [...newMessagesData[loggedUser][activeUser], {
+            newMessagesData[loggedUser][recvUser] = [...newMessagesData[loggedUser][recvUser], {
                 recieved: false,
                 type: "record",
                 data: "",
                 timeStamp: currTime,
                 file: url
             }];
-            newMessagesData[activeUser][loggedUser] = [...newMessagesData[activeUser][loggedUser], {
+            newMessagesData[recvUser][loggedUser] = [...newMessagesData[recvUser][loggedUser], {
                 recieved: true,
                 type: "record",
                 data: "",
@@ -74,19 +75,19 @@ export function RecordAudioModal(props) {
             // Update contacts database.
             var newContacts = contacts;
             newContacts.map((chatsInfosData) => {
-                if (activeUser === chatsInfosData.userName) {
+                if (recvUser === chatsInfosData.userName) {
                     chatsInfosData["message"] = "recording";
                     chatsInfosData["timeStamp"] = currTime;
                 }
             });
             setContacts(newContacts);
-
         };
         recorder.addEventListener("dataavailable", saveRecording);
         return () => recorder.removeEventListener("dataavailable", saveRecording);
     }, [recorder, isRecording]);
     const handleRecording = (e) => {
         if (!isRecording) {
+            setRecvUser(activeUser);
             setIsRecording(true);
         }
         else {
