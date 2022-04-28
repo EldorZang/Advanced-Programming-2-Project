@@ -26,4 +26,4 @@ frank123 | Frank | frank_pass | bob123
 `npm start`  
 6. Navigate to [http://localhost:3000](http://localhost:3000) in order to view it in your browser.  
 
-Please note, that because In Google Chrome forms aren't automatically out of focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
+Please note, that in Google Chrome (in opposed to Firefox) forms aren't automatically out-focused when disabled buttons are clicked. Therefore using Google Chrome browser requires clicking the background (or any other not-focused element) before clicking the login button.
