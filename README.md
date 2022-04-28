@@ -22,9 +22,8 @@ All can be installed with the command:
 
 # Running
 1. Create a new project:  
-
 `npx create-react-app projectname`  
-2. Copy both src and public folders to project directory (over-write new files).  
+2. Copy both src and public folders to project directory (overwrite new files).  
 3. Navigate to the project directory:  
 `cd projectname`  
 4. Install dependencies (JQuery, Bootstrap, React-Bootstrap and React-Router):  
