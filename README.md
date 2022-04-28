@@ -11,6 +11,7 @@ User Name | Nick Name | Password | Contacts
 bob123 | Bob | bob_pass | alice123, oliver123, olivia123, linda123, frank123
 alice123 | Alice | alice_pass | bob123
 oliver123 | Oliver | oliver_pass | bob123
+olivia123 | Olivia | olivia_pass | bob123
 linda123 | Linda | linda_pass | bob123
 frank123 | Frank | frank_pass | bob123
 
